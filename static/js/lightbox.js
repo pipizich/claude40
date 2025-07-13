@@ -1,9 +1,9 @@
 // ============================================================================
-// LIGHTBOX MANAGER - FIXED VERSION (Disable trong Select Mode)
+// LIGHTBOX MANAGER - FIXED SCROLL VERSION
 // ============================================================================
 
 // ============================================================================
-// CORE LIGHTBOX CLASS - FIXED
+// CORE LIGHTBOX CLASS - FIXED SCROLL MANAGEMENT
 // ============================================================================
 
 class LightboxCore {
@@ -16,6 +16,11 @@ class LightboxCore {
         this.elements = {};
         this.keyboardFocusTimeout = null;
         
+        // ✅ NEW: Scroll management state
+        this.originalScrollY = 0;
+        this.scrollBarWidth = 0;
+        this.hasCalculatedScrollBar = false;
+        
         this.init();
     }
     
@@ -27,10 +32,40 @@ class LightboxCore {
     
     init() {
         this.log('Initializing lightbox core...');
+        this.calculateScrollBarWidth();
         this.createLightboxHTML();
         this.collectImages();
         this.attachCoreEventListeners();
         this.log('Lightbox core initialization complete');
+    }
+    
+    // ✅ NEW: Calculate scrollbar width for smooth transitions
+    calculateScrollBarWidth() {
+        if (this.hasCalculatedScrollBar) return;
+        
+        // Create temporary elements to measure scrollbar width
+        const outer = document.createElement('div');
+        outer.style.visibility = 'hidden';
+        outer.style.width = '100px';
+        outer.style.msOverflowStyle = 'scrollbar';
+        
+        document.body.appendChild(outer);
+        
+        const widthNoScroll = outer.offsetWidth;
+        outer.style.overflow = 'scroll';
+        
+        const inner = document.createElement('div');
+        inner.style.width = '100%';
+        outer.appendChild(inner);
+        
+        const widthWithScroll = inner.offsetWidth;
+        
+        outer.parentNode.removeChild(outer);
+        
+        this.scrollBarWidth = widthNoScroll - widthWithScroll;
+        this.hasCalculatedScrollBar = true;
+        
+        this.log(`Calculated scrollbar width: ${this.scrollBarWidth}px`);
     }
     
     createLightboxHTML() {
@@ -348,6 +383,50 @@ class LightboxCore {
         }, { passive: true });
     }
     
+    // ✅ IMPROVED: Scroll management when opening lightbox
+    disableBodyScroll() {
+        this.log('🚫 Disabling body scroll...');
+        
+        // Store current scroll position
+        this.originalScrollY = window.scrollY || document.documentElement.scrollTop;
+        
+        // Add lightbox-open classes for CSS-based scroll management
+        document.body.classList.add('lightbox-open');
+        document.documentElement.classList.add('lightbox-open');
+        
+        // ✅ IMPROVED: Prevent scrollbar width from causing layout shift
+        if (this.scrollBarWidth > 0) {
+            document.body.style.paddingRight = `${this.scrollBarWidth}px`;
+        }
+        
+        // ✅ NEW: Maintain scroll position
+        document.body.style.top = `-${this.originalScrollY}px`;
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        
+        this.log(`✅ Body scroll disabled. Saved position: ${this.originalScrollY}px`);
+    }
+    
+    // ✅ IMPROVED: Scroll management when closing lightbox
+    enableBodyScroll() {
+        this.log('✅ Re-enabling body scroll...');
+        
+        // Remove lightbox-open classes
+        document.body.classList.remove('lightbox-open');
+        document.documentElement.classList.remove('lightbox-open');
+        
+        // ✅ IMPROVED: Restore body styles and scroll position
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.body.style.paddingRight = '';
+        
+        // ✅ NEW: Restore scroll position
+        window.scrollTo(0, this.originalScrollY);
+        
+        this.log(`✅ Body scroll enabled. Restored position: ${this.originalScrollY}px`);
+    }
+    
 	async open(target) {
 		// ✅ FINAL CHECK: Không mở lightbox trong select mode
 		if (this.isEditSelectMode()) {
@@ -395,6 +474,9 @@ class LightboxCore {
 			return;
 		}
 		
+		// ✅ IMPROVED: Disable body scroll before showing lightbox
+		this.disableBodyScroll();
+		
 		// Mở lightbox
 		this.currentIndex = index;
 		this.isOpen = true;
@@ -409,7 +491,6 @@ class LightboxCore {
 		}, 10);
 		
 		await this.loadImage(index);
-		document.body.style.overflow = 'hidden';
 		
 		// Announce to screen readers
 		this.announceToScreenReader(`Image ${index + 1} of ${this.images.length} opened`);
@@ -548,7 +629,9 @@ class LightboxCore {
         
         setTimeout(() => {
             this.container.style.display = 'none';
-            document.body.style.overflow = '';
+            
+            // ✅ IMPROVED: Re-enable body scroll after hiding lightbox
+            this.enableBodyScroll();
             
             // Return focus to the original image if possible
             const originalImage = document.querySelector(`[data-id="${this.images[this.currentIndex]?.id}"] img`);
@@ -676,7 +759,7 @@ class LightboxCore {
 }
 
 // ============================================================================
-// EDITING MODULE CLASS (unchanged)
+// EDITING MODULE CLASS (unchanged from original)
 // ============================================================================
 
 class LightboxEditing {
@@ -1129,13 +1212,13 @@ class LightboxEditing {
 }
 
 // ============================================================================
-// METADATA MODULE CLASS (unchanged)
+// METADATA MODULE CLASS (unchanged from original)
 // ============================================================================
 
 class LightboxMetadata {
     constructor(lightboxCore) {
         this.core = lightboxCore;
-        this.copyTimeouts = new Map(); // ✅ THÊM DÒNG NÀY
+        this.copyTimeouts = new Map();
         
         this.init();
     }
@@ -1520,7 +1603,7 @@ class LightboxMetadata {
 }
 
 // ============================================================================
-// MAIN LIGHTBOX MANAGER CLASS - FIXED
+// MAIN LIGHTBOX MANAGER CLASS - FIXED SCROLL
 // ============================================================================
 
 class Lightbox extends LightboxCore {
@@ -1534,7 +1617,7 @@ class Lightbox extends LightboxCore {
         // Properly expose methods to global scope AFTER initialization
         this.exposeGlobalMethods();
         
-        console.log('✨ Enhanced Lightbox with Edit Mode Support initialized');
+        console.log('✨ Enhanced Lightbox with FIXED Scroll Management initialized');
     }
     
     // Properly expose methods for HTML onclick handlers
@@ -1590,5 +1673,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.log('✅ Lightbox methods exposed globally');
         console.log('✅ Edit mode support: Lightbox disabled in select mode');
+        console.log('✅ Fixed scroll management: No duplicate scroll bars');
     }
 });
