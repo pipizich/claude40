@@ -39,148 +39,228 @@ function waitForCore() {
  * Modal Manager
  * Handles all modal dialogs in the application
  */
+/**
+ * Modal Manager - FIXED VERSION
+ * Thêm logic ẩn/hiện edit-mode-button khi mở/đóng modal
+ */
 class ModalManager {
-  constructor() {
-    this.modals = {
-      add: document.getElementById('add-artwork-modal'),
-      edit: document.getElementById('edit-artwork-modal'),
-      view: document.getElementById('view-description-modal'),
-      delete: document.getElementById('delete-confirm-modal')
-    };
-    
-    this.currentEditId = null;
-    this.artworkToDelete = null;
-    
-    this.init();
-  }
-
-  init() {
-    const addBtn = document.getElementById('add-artwork-btn');
-    if (addBtn) {
-      addBtn.addEventListener('click', () => this.openAddModal());
+    constructor() {
+        this.modals = {
+            add: document.getElementById('add-artwork-modal'),
+            edit: document.getElementById('edit-artwork-modal'),
+            view: document.getElementById('view-description-modal'),
+            delete: document.getElementById('delete-confirm-modal')
+        };
+        
+        this.currentEditId = null;
+        this.artworkToDelete = null;
+        
+        // ✅ NEW: Track floating buttons that should be hidden during modals
+        this.floatingButtons = [];
+        this.originalDisplayStates = new Map();
+        
+        this.init();
     }
 
-    document.querySelectorAll('.close').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const modal = btn.closest('.modal');
-        this.closeModal(modal);
-      });
-    });
-
-    window.addEventListener('click', (e) => {
-      if (e.target.classList.contains('modal')) {
-        this.closeModal(e.target);
-      }
-    });
-
-    const confirmBtn = document.getElementById('confirm-delete');
-    const cancelBtn = document.getElementById('cancel-delete');
-    
-    if (confirmBtn) confirmBtn.addEventListener('click', () => this.handleDelete());
-    if (cancelBtn) cancelBtn.addEventListener('click', () => this.closeModal(this.modals.delete));
-
-    // Listen for core events
-    window.addEventListener('showDescription', (e) => {
-      this.openViewModal(e.detail);
-    });
-  }
-
-  openAddModal() {
-    window.galleryCore.AnimationManager.animateModalOpen(this.modals.add);
-    if (window.toast) window.toast.info('Ready to add new artwork');
-  }
-
-  openEditModal(data) {
-    this.currentEditId = data.id;
-    
-    const titleInput = document.getElementById('edit-title');
-    const descInput = document.getElementById('edit-description');
-    
-    if (titleInput) titleInput.value = data.title || '';
-    if (descInput) descInput.value = data.description || '';
-    
-    window.galleryCore.AnimationManager.animateModalOpen(this.modals.edit);
-    if (window.toast) window.toast.info(`Editing: "${data.title || 'Untitled'}"`);
-  }
-
-  openDeleteModal(data) {
-    this.artworkToDelete = data.id;
-    window.galleryCore.AnimationManager.animateModalOpen(this.modals.delete);
-    if (window.toast) window.toast.warning(`Confirm deletion of "${data.title || 'this artwork'}"`);
-  }
-
-  openViewModal(data) {
-    const titleEl = document.getElementById('view-title');
-    const descEl = document.getElementById('view-description-text');
-    
-    if (titleEl) titleEl.textContent = data.title || 'Untitled';
-    if (descEl) descEl.textContent = data.description || 'No description available.';
-    
-    window.galleryCore.AnimationManager.animateModalOpen(this.modals.view);
-    if (window.toast) window.toast.info('Description loaded');
-  }
-
-  async closeModal(modal) {
-    if (!modal) return;
-    
-    const form = modal.querySelector('form');
-    if (form) {
-      form.reset();
-      const previewContainer = form.querySelector('[id*="preview-container"]');
-      if (previewContainer) previewContainer.innerHTML = '';
-    }
-
-    if (modal === this.modals.edit) this.currentEditId = null;
-    if (modal === this.modals.delete) this.artworkToDelete = null;
-
-    await window.galleryCore.AnimationManager.animateModalClose(modal);
-    if (window.toast) window.toast.info('Modal closed');
-  }
-
-  closeAllModals() {
-    Object.values(this.modals).forEach(modal => {
-      if (modal && modal.style.display === 'block') {
-        this.closeModal(modal);
-      }
-    });
-  }
-
-  async handleDelete() {
-    if (!this.artworkToDelete) return;
-
-    const deleteBtn = document.getElementById('confirm-delete');
-    window.galleryCore.LoadingManager.setButtonLoading(deleteBtn, true);
-    
-    try {
-      const result = await window.galleryCore.enhancedFetch(`/delete/${this.artworkToDelete}`, { 
-        method: 'POST'
-      });
-      
-      if (result.success) {
-        const artworkEl = document.querySelector(`[data-id="${this.artworkToDelete}"]`);
-        if (artworkEl) {
-          await window.galleryCore.AnimationManager.animateRemoveArtwork(artworkEl);
-          artworkEl.remove();
-          
-          if (window.artGalleryApp && window.artGalleryApp.updateImageCounter) {
-            window.artGalleryApp.updateImageCounter();
-          }
+    init() {
+        // ✅ NEW: Find floating buttons to hide during modals
+        this.findFloatingButtons();
+        
+        const addBtn = document.getElementById('add-artwork-btn');
+        if (addBtn) {
+            addBtn.addEventListener('click', () => this.openAddModal());
         }
+
+        document.querySelectorAll('.close').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const modal = btn.closest('.modal');
+                this.closeModal(modal);
+            });
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                this.closeModal(e.target);
+            }
+        });
+
+        const confirmBtn = document.getElementById('confirm-delete');
+        const cancelBtn = document.getElementById('cancel-delete');
         
-        if (window.toast) window.toast.success(result.message);
-        await this.closeModal(this.modals.delete);
-        
-      } else {
-        throw new Error(result.message);
-      }
-      
-    } catch (error) {
-      console.error('Delete error:', error);
-      if (window.toast) window.toast.error(`Failed to delete: ${error.message}`);
-    } finally {
-      window.galleryCore.LoadingManager.setButtonLoading(deleteBtn, false);
+        if (confirmBtn) confirmBtn.addEventListener('click', () => this.handleDelete());
+        if (cancelBtn) cancelBtn.addEventListener('click', () => this.closeModal(this.modals.delete));
+
+        // Listen for core events
+        window.addEventListener('showDescription', (e) => {
+            this.openViewModal(e.detail);
+        });
     }
-  }
+
+    // ✅ NEW: Find floating buttons that should be hidden during modals
+    findFloatingButtons() {
+        this.floatingButtons = [
+            document.querySelector('.edit-mode-button'),
+            document.querySelector('.theme-toggle-container'),
+            document.querySelector('.metadata-viewer-toggle'),
+            document.querySelector('.fab')
+        ].filter(Boolean);
+        
+        console.log(`🔍 Found ${this.floatingButtons.length} floating buttons to manage`);
+    }
+
+    // ✅ NEW: Hide floating buttons when modal opens
+    hideFloatingButtons() {
+        this.floatingButtons.forEach(button => {
+            if (button && !this.originalDisplayStates.has(button)) {
+                // Store original display state
+                const computedDisplay = window.getComputedStyle(button).display;
+                const inlineDisplay = button.style.display;
+                this.originalDisplayStates.set(button, inlineDisplay || computedDisplay || '');
+                
+                // Hide button
+                button.style.display = 'none';
+            }
+        });
+        console.log('🙈 Floating buttons hidden for modal');
+    }
+
+    // ✅ NEW: Show floating buttons when modal closes
+    showFloatingButtons() {
+        this.floatingButtons.forEach(button => {
+            if (button && this.originalDisplayStates.has(button)) {
+                // Restore original display state
+                const originalDisplay = this.originalDisplayStates.get(button);
+                button.style.display = originalDisplay === 'none' ? '' : originalDisplay;
+                this.originalDisplayStates.delete(button);
+            }
+        });
+        console.log('👀 Floating buttons restored after modal close');
+    }
+
+    openAddModal() {
+        // ✅ FIXED: Hide floating buttons before opening modal
+        this.hideFloatingButtons();
+        
+        window.galleryCore.AnimationManager.animateModalOpen(this.modals.add);
+        if (window.toast) window.toast.info('Ready to add new artwork');
+    }
+
+    openEditModal(data) {
+        // ✅ FIXED: Hide floating buttons before opening modal
+        this.hideFloatingButtons();
+        
+        this.currentEditId = data.id;
+        
+        const titleInput = document.getElementById('edit-title');
+        const descInput = document.getElementById('edit-description');
+        
+        if (titleInput) titleInput.value = data.title || '';
+        if (descInput) descInput.value = data.description || '';
+        
+        window.galleryCore.AnimationManager.animateModalOpen(this.modals.edit);
+        if (window.toast) window.toast.info(`Editing: "${data.title || 'Untitled'}"`);
+    }
+
+    openDeleteModal(data) {
+        // ✅ FIXED: Hide floating buttons before opening modal
+        this.hideFloatingButtons();
+        
+        this.artworkToDelete = data.id;
+        window.galleryCore.AnimationManager.animateModalOpen(this.modals.delete);
+        if (window.toast) window.toast.warning(`Confirm deletion of "${data.title || 'this artwork'}"`);
+    }
+
+    openViewModal(data) {
+        // ✅ FIXED: Hide floating buttons before opening modal
+        this.hideFloatingButtons();
+        
+        const titleEl = document.getElementById('view-title');
+        const descEl = document.getElementById('view-description-text');
+        
+        if (titleEl) titleEl.textContent = data.title || 'Untitled';
+        if (descEl) descEl.textContent = data.description || 'No description available.';
+        
+        window.galleryCore.AnimationManager.animateModalOpen(this.modals.view);
+        if (window.toast) window.toast.info('Description loaded');
+    }
+
+    async closeModal(modal) {
+        if (!modal) return;
+        
+        const form = modal.querySelector('form');
+        if (form) {
+            form.reset();
+            const previewContainer = form.querySelector('[id*="preview-container"]');
+            if (previewContainer) previewContainer.innerHTML = '';
+        }
+
+        if (modal === this.modals.edit) this.currentEditId = null;
+        if (modal === this.modals.delete) this.artworkToDelete = null;
+
+        await window.galleryCore.AnimationManager.animateModalClose(modal);
+        
+        // ✅ FIXED: Restore floating buttons after modal closes
+        this.showFloatingButtons();
+        
+        if (window.toast) window.toast.info('Modal closed');
+    }
+
+    closeAllModals() {
+        Object.values(this.modals).forEach(modal => {
+            if (modal && modal.style.display === 'block') {
+                this.closeModal(modal);
+            }
+        });
+    }
+
+    // ✅ NEW: Emergency cleanup method
+    forceRestoreFloatingButtons() {
+        this.originalDisplayStates.forEach((originalDisplay, button) => {
+            if (button) {
+                button.style.display = originalDisplay === 'none' ? '' : originalDisplay;
+            }
+        });
+        this.originalDisplayStates.clear();
+        console.log('🚨 Emergency restore of floating buttons completed');
+    }
+
+    // ... rest of the methods remain the same
+    async handleDelete() {
+        if (!this.artworkToDelete) return;
+
+        const deleteBtn = document.getElementById('confirm-delete');
+        window.galleryCore.LoadingManager.setButtonLoading(deleteBtn, true);
+        
+        try {
+            const result = await window.galleryCore.enhancedFetch(`/delete/${this.artworkToDelete}`, { 
+                method: 'POST'
+            });
+            
+            if (result.success) {
+                const artworkEl = document.querySelector(`[data-id="${this.artworkToDelete}"]`);
+                if (artworkEl) {
+                    await window.galleryCore.AnimationManager.animateRemoveArtwork(artworkEl);
+                    artworkEl.remove();
+                    
+                    if (window.artGalleryApp && window.artGalleryApp.updateImageCounter) {
+                        window.artGalleryApp.updateImageCounter();
+                    }
+                }
+                
+                if (window.toast) window.toast.success(result.message);
+                await this.closeModal(this.modals.delete);
+                
+            } else {
+                throw new Error(result.message);
+            }
+            
+        } catch (error) {
+            console.error('Delete error:', error);
+            if (window.toast) window.toast.error(`Failed to delete: ${error.message}`);
+        } finally {
+            window.galleryCore.LoadingManager.setButtonLoading(deleteBtn, false);
+        }
+    }
 }
 
 /**
