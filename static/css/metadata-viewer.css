@@ -1,0 +1,428 @@
+/* =================================
+   METADATA VIEWER STYLES (FIXED SCROLL ISSUE)
+   ================================= */
+
+/* =================================
+   METADATA VIEWER TOGGLE BUTTON
+   ================================= */
+
+.metadata-viewer-toggle {
+    position: fixed;
+    top: 70px;
+    left: 80px;
+    z-index: 1000;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    transition: all 0.3s ease;
+    font-family: 'InterVariable', 'Inter', sans-serif;
+}
+
+.metadata-viewer-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+}
+
+.metadata-viewer-toggle.active {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+}
+
+/* Dark mode styles */
+[data-theme="dark"] .metadata-viewer-toggle {
+    background: linear-gradient(135deg, #8be9fd 0%, #50fa7b 100%);
+    color: #0a0a0a;
+    box-shadow: 0 4px 15px rgba(139, 233, 253, 0.4);
+}
+
+[data-theme="dark"] .metadata-viewer-toggle.active {
+    background: linear-gradient(135deg, #ff79c6 0%, #bd93f9 100%);
+    color: white;
+}
+
+/* =================================
+   METADATA VIEWER CONTAINER (SCROLL Ở NGOÀI CÙNG)
+   ================================= */
+
+.metadata-viewer-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;           /* ← Sử dụng viewport width */
+    height: 100vh;          /* ← Sử dụng viewport height */
+    background: var(--background-color);
+    z-index: 2000;
+    overflow-y: auto;       /* ← SCROLL BAR Ở NGOÀI CÙNG */
+    overflow-x: hidden;     /* ← Ẩn scroll ngang */
+    font-family: 'InterVariable', 'Inter', sans-serif;
+}
+
+.metadata-viewer-container.active {
+    display: block;         /* ← Đổi lại thành block */
+}
+
+/* FIX: Đảm bảo không có scroll bar kép */
+body.metadata-viewer-open {
+    overflow: hidden !important;
+    height: 100vh;
+    width: 100vw;
+}
+
+html.metadata-viewer-open {
+    overflow: hidden !important;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* Header */
+.metadata-header {
+    position: sticky;       /* ← Sticky để header luôn hiển thị + relative cho back button */
+    top: 0;                 /* ← Sticky ở top */
+    background: white;
+    border-bottom: 1px solid var(--border-color);
+    padding: 20px;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+[data-theme="dark"] .metadata-header {
+    background: rgba(10, 10, 10, 0.98);
+    border-bottom: 2px solid #ff6b35;
+    box-shadow: 0 2px 20px rgba(255, 107, 53, 0.2);
+}
+
+.metadata-header h2 {
+    margin: 0;
+    font-size: 2rem;
+    color: var(--title-color);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-align: center;
+    flex: 1;
+    justify-content: center;
+}
+
+.metadata-header h2 i {
+    font-size: 1.5rem;
+}
+
+/* Back Button */
+.metadata-back-btn {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 2px 8px rgba(0, 122, 255, 0.2);
+    font-family: inherit;
+    min-height: 32px;
+}
+
+.metadata-back-btn:hover {
+    background: linear-gradient(135deg, #0056CC 0%, #32ADE6 100%);
+    transform: translateY(-50%) translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+}
+
+.metadata-back-btn:active {
+    transform: translateY(-50%) scale(0.98);
+    background: linear-gradient(135deg, #004999 0%, #1E90DA 100%);
+}
+
+[data-theme="dark"] .metadata-back-btn {
+    background: linear-gradient(135deg, #ff79c6 0%, #bd93f9 100%);
+    color: #0a0a0a;
+    box-shadow: 0 4px 15px rgba(255, 121, 198, 0.4);
+}
+
+[data-theme="dark"] .metadata-back-btn:hover {
+    background: linear-gradient(135deg, #ff6bbd 0%, #a855f7 100%);
+    box-shadow: 0 6px 20px rgba(255, 121, 198, 0.6);
+}
+
+/* Main Content (SCROLL Ở CONTAINER, KHÔNG Ở ĐÂY) */
+.metadata-content {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: calc(100vh - 120px); /* ← Đảm bảo content đủ cao để scroll */
+}
+
+/* Custom scrollbar cho CONTAINER (Ở NGOÀI CÙNG) */
+.metadata-viewer-container::-webkit-scrollbar {
+    width: 12px;               /* ← Rộng hơn để dễ thấy */
+}
+
+.metadata-viewer-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 0;          /* ← Không bo tròn để sát edge */
+}
+
+.metadata-viewer-container::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    transition: background 0.2s ease;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+.metadata-viewer-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5);
+    background-clip: padding-box;
+}
+
+.metadata-viewer-container::-webkit-scrollbar-corner {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] .metadata-viewer-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .metadata-viewer-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    background-clip: padding-box;
+}
+
+[data-theme="dark"] .metadata-viewer-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+    background-clip: padding-box;
+}
+
+[data-theme="dark"] .metadata-viewer-container::-webkit-scrollbar-corner {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Upload Zone */
+.metadata-upload-zone {
+    border: 3px dashed var(--border-color);
+    border-radius: 12px;
+    padding: 60px 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(0, 0, 0, 0.02);
+    margin-bottom: 40px;
+}
+
+.metadata-upload-zone:hover {
+    border-color: var(--button-color);
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.metadata-upload-zone.dragover {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: #6366f1;
+}
+
+[data-theme="dark"] .metadata-upload-zone {
+    background: rgba(10, 10, 10, 0.6);
+    border-color: #bd93f9;
+}
+
+[data-theme="dark"] .metadata-upload-zone:hover {
+    border-color: #ff79c6;
+    box-shadow: inset 0 0 30px rgba(255, 121, 198, 0.1);
+}
+
+.metadata-upload-zone h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.5rem;
+    color: var(--title-color);
+}
+
+.metadata-upload-zone p {
+    margin: 5px 0;
+    color: var(--text-color);
+    font-size: 1rem;
+}
+
+.upload-icon {
+    font-size: 3rem;
+    background: linear-gradient(135deg, #28CD41 0%, #00C851 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+}
+
+[data-theme="dark"] .upload-icon {
+    color: #8be9fd;
+}
+
+/* Image Preview */
+.metadata-image-preview {
+    display: none;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.metadata-image-preview.active {
+    display: block;
+}
+
+.preview-image-container {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+}
+
+.preview-image {
+    max-width: 100%;
+    max-height: 500px;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.clear-image-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #FF3B30;
+    color: white;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.clear-image-btn:hover {
+    background: #e02822;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+}
+
+/* Metadata Display */
+.metadata-display {
+    display: none;
+}
+
+.metadata-display.active {
+    display: block;
+}
+
+.metadata-section {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] .metadata-section {
+    background: rgba(30, 31, 41, 0.8);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 107, 53, 0.2);
+}
+
+.metadata-section h3 {
+    margin: 0 0 15px 0;
+    font-size: 1.25rem;
+    color: var(--title-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.metadata-section h3 i {
+    font-size: 1.4rem;
+    opacity: 0.7;
+}
+
+.metadata-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;        /* ← Cố định layout table */
+}
+
+.metadata-table tr {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] .metadata-table tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.metadata-table td {
+    padding: 10px;
+    vertical-align: top;
+    word-wrap: break-word;      /* ← Đảm bảo text wrap */
+    overflow-wrap: break-word;  /* ← Fallback cho word-wrap */
+}
+
+.metadata-table td:first-child {
+    font-weight: 600;
+    color: #007AFF;
+    width: 30%;
+    min-width: 150px;
+}
+
+[data-theme="dark"] .metadata-table td:first-child {
+    color: #8be9fd;
+}
+
+.metadata-table td:last-child {
+    color: var(--text-color);
+    word-break: break-word;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    width: 70%;
+}
+
+/* Empty state */
+.metadata-empty {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+}
+
+.metadata-empty i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    display: block;
+    opacity: 0.3;
+}
+
+/* Loading state */
+.metadata-loading {
+    display: none;
+    text-align: center;
+    padding: 40px;
+}
+
+.metadata-loading.active {
+    display: block;
+}

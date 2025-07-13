@@ -1,0 +1,739 @@
+/* =================================================================
+   🎨 EDIT MODE STYLES - ENHANCED SELECT MODE UX
+   Fixed lightbox disable and improved visual feedback
+   ================================================================= */
+
+/* =================================================================
+   EDIT MODE BUTTON (SIMPLIFIED)
+   ================================================================= */
+
+.edit-mode-button {
+    position: fixed;
+    top: 70px;
+    left: 20px;
+	z-index: 1000;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+    transition: all 0.3s ease;
+}
+
+.edit-mode-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
+}
+
+/* Dark mode toggle button */
+.dark-mode-toggle {
+    position: fixed !important;
+    top: 20px;
+    right: 80px;
+    z-index: 1000;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffd93d 0%, #ff6b35 100%);
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+    transition: all 0.3s ease;
+}
+
+.dark-mode-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+}
+
+/* Dark mode styles for edit button */
+[data-theme="dark"] .edit-mode-button {
+    background: linear-gradient(135deg, #50fa7b 0%, #5af78e 100%);
+    color: #0a0a0a;
+    box-shadow: 0 4px 15px rgba(80, 250, 123, 0.4);
+}
+
+[data-theme="dark"] .edit-mode-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(80, 250, 123, 0.5);
+}
+
+[data-theme="dark"] .dark-mode-toggle {
+    background: linear-gradient(135deg, #8be9fd 0%, #50fa7b 100%);
+    color: #0a0a0a;
+}
+
+/* =================================================================
+   EDIT MODE CONTROLS BAR
+   ================================================================= */
+
+.edit-mode-controls {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px 20px;
+    z-index: 999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.edit-view-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px 20px;
+    z-index: 999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.edit-view-header.active,
+.edit-select-header.active {
+    display: flex;
+}
+
+.edit-select-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px 20px;
+    z-index: 999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+[data-theme="dark"] .edit-view-header,
+[data-theme="dark"] .edit-select-header {
+    background: rgba(10, 10, 10, 0.98);
+    box-shadow: 0 2px 20px rgba(255, 107, 53, 0.2);
+    border-bottom: 2px solid #ff6b35;
+}
+
+.edit-view-controls,
+.edit-select-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 20px;
+}
+
+.edit-controls-left,
+.edit-controls-center,
+.edit-controls-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.edit-controls-center {
+    justify-content: center;
+}
+
+.edit-controls-right {
+    justify-content: flex-end;
+}
+
+/* Control buttons */
+.btn-enter-select,
+.btn-cancel-select,
+.btn-select-all {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'InterVariable','Inter', sans-serif;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-back-gallery {
+    background: #1d1d1f;
+    color: #f5f5f7;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'InterVariable', 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    letter-spacing: -0.01em;
+    min-height: 44px; /* Apple's minimum touch target */
+}
+
+.btn-back-gallery:hover {
+    background: #2c2c2e;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12);
+}
+
+.btn-back-gallery:active {
+    background: #1a1a1c;
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.1s ease;
+}
+
+.btn-back-gallery:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3), 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Dark mode adjustments for Apple style */
+[data-theme="dark"] .btn-back-gallery {
+    background: #000000;
+    color: #ffffff;
+    border: 1.5px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .btn-back-gallery:hover {
+    background: #1c1c1e;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-enter-select:hover,
+.btn-cancel-select:hover,
+.btn-select-all:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+.btn-cancel-select {
+    background: #ef4444;
+}
+
+.btn-cancel-select:hover {
+    background: #dc2626;
+}
+
+.btn-batch-upload {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'InterVariable','Inter', sans-serif;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-batch-upload:hover {
+    background: #059669;
+    transform: translateY(-1px);
+}
+
+.total-counter,
+.selection-counter {
+    font-family: 'InterVariable','Inter', sans-serif;
+    font-weight: 600;
+    color: #333;
+    padding: 8px 16px;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 6px;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+[data-theme="dark"] .total-counter,
+[data-theme="dark"] .selection-counter {
+    color: #8be9fd;
+    background: rgba(139, 233, 253, 0.1);
+    border-color: rgba(139, 233, 253, 0.2);
+}
+
+/* =================================================================
+   EDIT MODE ACTION BAR
+   ================================================================= */
+
+.edit-action-bar {
+    position: fixed;
+    bottom: -100px;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    transition: bottom 0.3s ease;
+}
+
+.edit-action-bar.visible {
+    bottom: 0;
+}
+
+[data-theme="dark"] .edit-action-bar {
+    background: rgba(10, 10, 10, 0.98);
+    box-shadow: 0 -4px 30px rgba(255, 107, 53, 0.3);
+    border-top: 2px solid #ff6b35;
+}
+
+.action-btn {
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    font-family: 'InterVariable','Inter', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-move-top {
+    background: #6366f1;
+    color: white;
+}
+
+.btn-move-top:hover {
+    background: #4f46e5;
+    transform: translateY(-1px);
+}
+
+.btn-move-bottom {
+    background: #8b5cf6;
+    color: white;
+}
+
+.btn-move-bottom:hover {
+    background: #7c3aed;
+    transform: translateY(-1px);
+}
+
+.btn-delete-selected {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-delete-selected:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
+
+/* =================================================================
+   EDIT MODE GALLERY STYLES - ENHANCED
+   ================================================================= */
+
+/* ✅ ENHANCED: Disable animations and interactions in edit mode */
+.edit-view-mode .artwork,
+.edit-select-mode .artwork {
+    transition: none !important;
+}
+
+.edit-view-mode .artwork:hover,
+.edit-select-mode .artwork:hover {
+    transform: none !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
+}
+
+.edit-view-mode .artwork-container img,
+.edit-select-mode .artwork-container img {
+    transition: none !important;
+    transform: none !important;
+}
+
+/* ✅ ENHANCED: Special styling for select mode */
+.edit-select-mode .artwork {
+    cursor: pointer !important;
+    user-select: none;
+}
+
+.edit-select-mode .artwork:hover {
+    background: rgba(59, 130, 246, 0.05) !important;
+    border-color: rgba(59, 130, 246, 0.2) !important;
+}
+
+.edit-select-mode .artwork.selected:hover {
+    background: rgba(16, 185, 129, 0.1) !important;
+    border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+/* ✅ ENHANCED: Disable image pointer events in select mode */
+.edit-select-mode .artwork img {
+    pointer-events: none !important;
+    user-select: none !important;
+}
+
+.edit-select-mode .artwork-container {
+    position: relative;
+    cursor: pointer !important;
+}
+
+/* Thumbnail size in edit mode - Desktop optimized */
+.edit-view-mode .artwork,
+.edit-select-mode .artwork {
+    width: 150px;
+}
+
+.edit-view-mode .artwork-container,
+.edit-select-mode .artwork-container {
+    height: 150px;
+}
+
+.edit-view-mode .artwork-container img,
+.edit-select-mode .artwork-container img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+/* ✅ ENHANCED: Checkbox styles with better visibility */
+.artwork-checkbox {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 10;
+    
+    /* ✅ ENHANCED: Better styling */
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #3b82f6;
+    border-radius: 4px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.artwork-checkbox::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 12px;
+    height: 12px;
+    background: #3b82f6;
+    border-radius: 2px;
+    transition: transform 0.2s ease;
+}
+
+.artwork-checkbox:checked::before {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.artwork-checkbox:checked {
+    background: #3b82f6;
+    border-color: #3b82f6;
+}
+
+.artwork-checkbox:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.edit-select-mode .artwork-checkbox {
+    opacity: 1;
+    visibility: visible;
+}
+
+.edit-select-mode .artwork:hover .artwork-checkbox {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+/* ✅ ENHANCED: Selected artwork overlay with better animation */
+.artwork.selected {
+    position: relative;
+    border-color: #10b981 !important;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3) !important;
+}
+
+.artwork.selected::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+    pointer-events: none;
+    border-radius: inherit;
+    animation: selectionPulse 2s ease-in-out infinite;
+}
+
+[data-theme="dark"] .artwork.selected::after {
+    background: linear-gradient(135deg, rgba(80, 250, 123, 0.2) 0%, rgba(139, 233, 253, 0.1) 100%);
+}
+
+/* ✅ NEW: Selection pulse animation */
+@keyframes selectionPulse {
+    0%, 100% { 
+        opacity: 0.6;
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.8;
+        transform: scale(1.005);
+    }
+}
+
+/* ✅ ENHANCED: Visual feedback for select mode */
+.edit-select-mode .artwork:active {
+    transform: scale(0.98) !important;
+    transition: transform 0.1s ease !important;
+}
+
+/* Hide artwork info in edit mode */
+.edit-view-mode .artwork-info,
+.edit-select-mode .artwork-info {
+    display: none;
+}
+
+/* Hide individual action buttons in edit mode */
+.edit-view-mode .artwork-actions,
+.edit-select-mode .artwork-actions {
+    display: none !important;
+}
+
+/* ✅ ENHANCED: Select mode indicator */
+.edit-select-mode::before {
+    content: '✓ Select Mode - Click images to select/deselect';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(59, 130, 246, 0.95);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 10000;
+    pointer-events: none;
+    opacity: 0;
+    animation: selectModeHint 3s ease-in-out;
+    font-family: 'InterVariable','Inter', sans-serif;
+}
+
+@keyframes selectModeHint {
+    0% { opacity: 0; transform: translate(-50%, -50%) translateY(20px); }
+    15% { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
+    85% { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
+    100% { opacity: 0; transform: translate(-50%, -50%) translateY(-20px); }
+}
+
+[data-theme="dark"] .edit-select-mode::before {
+    background: rgba(80, 250, 123, 0.95);
+    color: #0a0a0a;
+}
+
+/* =================================================================
+   BATCH UPLOAD MODAL
+   ================================================================= */
+
+.batch-upload-modal {
+    display: none;
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.batch-upload-content {
+    position: relative;
+    background-color: var(--background-color);
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 12px;
+    width: 80%;
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.batch-drop-zone {
+    border: 3px dashed var(--border-color);
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.batch-drop-zone:hover {
+    border-color: var(--button-color);
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.batch-drop-zone.dragover {
+    background: rgba(78, 205, 196, 0.1);
+    border-color: #4ecdc4;
+}
+
+.batch-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.batch-preview-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.batch-preview-item img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.batch-preview-item .remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.batch-upload-progress {
+    margin-top: 20px;
+}
+
+.progress-item {
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background: #f0f0f0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+/* =================================================================
+   ACCESSIBILITY & PERFORMANCE
+   ================================================================= */
+
+.edit-mode-button:focus,
+.dark-mode-toggle:focus,
+.btn-select-all:focus,
+.btn-batch-upload:focus,
+.action-btn:focus {
+    outline: 2px solid var(--button-color);
+    outline-offset: 2px;
+}
+
+.artwork-checkbox:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* ✅ ENHANCED: Better keyboard navigation in select mode */
+.edit-select-mode .artwork:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+    background: rgba(59, 130, 246, 0.05);
+}
+
+/* Performance optimizations */
+.edit-view-mode .artwork,
+.edit-select-mode .artwork {
+    will-change: auto !important;
+}
+
+.edit-view-mode .gallery,
+.edit-select-mode .gallery {
+    contain: layout style;
+}
+
+.edit-view-mode .artwork-container img,
+.edit-select-mode .artwork-container img {
+    transform: translateZ(0) !important;
+    backface-visibility: visible !important;
+}
+
+/* ✅ ENHANCED: Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .artwork.selected::after,
+    .edit-select-mode::before {
+        animation: none !important;
+    }
+    
+    .artwork-checkbox,
+    .edit-select-mode .artwork:hover .artwork-checkbox {
+        transition: none !important;
+        transform: none !important;
+    }
+}

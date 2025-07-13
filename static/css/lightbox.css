@@ -1,0 +1,1573 @@
+/* =========================================================================
+   LIGHTBOX COMPLETE STYLES - DESKTOP ONLY (CLEANED)
+   =========================================================================
+   
+   This file contains all lightbox CSS without animations:
+   - Core Layout & Structure
+   - Interactive Features & AI Metadata  
+   - Light Theme (Modern Dark Style)
+   - Dark Theme (Retro Neon Style)
+   - Common Styles
+   - NO ANIMATIONS - ALL MOVED TO animations.css
+   - NO MOBILE RESPONSIVE DESIGN
+   
+   ========================================================================= */
+
+/* =========================================================================
+   1. CORE LAYOUT & STRUCTURE
+   ========================================================================= */
+
+.lightbox {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 2000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.lightbox.active {
+    opacity: 1;
+}
+
+.lightbox-content {
+    display: flex;
+    width: 90%;
+    height: 90%;
+    max-width: 1400px;
+    gap: 20px;
+}
+
+.lightbox-image-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.lightbox-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    font-size: 24px;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'InterVariable','Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    user-select: none;
+    z-index: 10;
+}
+
+.lightbox-nav:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.lightbox-nav:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+}
+
+.lightbox-prev { 
+    left: 30px;
+}
+
+.lightbox-next { 
+    right: 30px;
+}
+
+/* Navigation icons - improved arrows */
+.lightbox-prev::before {
+    content: "❮";
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 1;
+}
+
+.lightbox-next::before {
+    content: "❯";
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 1;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    font-size: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.lightbox-close:hover {
+    background: rgba(255, 107, 107, 0.8);
+    transform: rotate(90deg);
+}
+
+.lightbox-info {
+    width: 400px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    overflow-y: auto;
+    color: white;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Title & Description Containers */
+.lightbox-title-container,
+.lightbox-description-container {
+    position: relative;
+    margin-bottom: 16px;
+    padding: 8px 0;
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+/* Basic Title & Description Styles */
+.lightbox-title {
+    position: relative;
+    margin-bottom: 16px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #00ff41;
+    font-family:'InterVariable','Inter',sans-serif;
+    letter-spacing: 2px;
+    padding: 8px 0;
+    border-bottom: 2px solid #00ff41;
+    text-shadow: 0 0 8px rgba(0, 255, 65, 0.5);
+    line-height: 1.3;
+    margin: 0;
+}
+
+.lightbox-description {
+    position: relative;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #cccccc;
+    line-height: 1.5;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 300;
+    opacity: 0.9;
+    margin: 0;
+    white-space: normal;
+}
+
+.metadata-grid {
+    display: grid;
+    gap: 8px;
+}
+
+.metadata-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    padding: 10px 15px;
+    transition: all 0.3s ease;
+    position: relative;
+    border: 1px solid transparent;
+    
+    /* Layout 2 cột */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.metadata-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-1px);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Label bên trái */
+.metadata-label {
+    font-weight: bold;
+    color: #50fa7b;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 0;
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    flex-shrink: 0;
+    min-width: fit-content;
+}
+
+/* Value bên phải */
+.metadata-value {
+    color: #f1fa8c;
+    font-size: 14px;
+    line-height: 1.5;
+    word-break: break-word;
+    font-family: 'JetBrains Mono', monospace;
+    text-align: right;
+    flex: 1;
+}
+
+/* Collapsible sections */
+.collapsible-section {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.collapsible-section:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.section-header {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.section-header:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.section-header h5 {
+    margin: 0;
+    color: #8be9fd;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    font-family:'InterVariable','Inter',sans-serif;
+}
+
+.section-header h5 i {
+    font-size: 18px; /* Áp dụng cho tất cả icons trong section headers */
+}
+
+.toggle-icon {
+    color: #50fa7b;
+    transition: transform 0.3s ease;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.section-content {
+    padding: 0 10px;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.collapsible-section.expanded .section-content {
+    max-height: 600px;
+    padding: 10px;
+}
+
+.collapsible-section.expanded .toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* Prompt Sections */
+.prompt-section {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    margin-bottom: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.prompt-header {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+    padding: 8px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.prompt-header h6 {
+    margin: 0;
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-family:'InterVariable','Inter',sans-serif;
+}
+
+.prompt-header h6 i {
+    font-size: 18px; /* Áp dụng cho tất cả icons */
+}
+
+.prompt-content {
+    position: relative;
+    padding: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #f1fa8c;
+    background: rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.prompt-content.collapsed {
+    max-height: 120px;
+}
+
+.prompt-content.expanded {
+    max-height: none;
+}
+
+.prompt-text {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+/* Negative prompt specific styling */
+.negative-prompt-section .prompt-header {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+}
+
+.negative-prompt-section .prompt-content {
+    border-right: 3px solid #ef4444;
+    color: #fca5a5;
+}
+
+/* =========================================================================
+   2. INTERACTIVE FEATURES & AI METADATA ENHANCEMENTS
+   ========================================================================= */
+
+/* Expandable text functionality */
+.lightbox-title .text-content,
+.lightbox-description .text-content {
+    display: inline;
+    transition: all 0.3s ease;
+}
+
+/* Text truncation using line-clamp for better control */
+.lightbox-title .text-content.truncated {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.3;
+}
+
+.lightbox-description .text-content.truncated {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.5;
+}
+
+/* Show more/less buttons */
+.show-more-btn {
+    display: inline;
+    margin-left: 8px;
+    background: transparent;
+    padding: 2px 8px;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'InterVariable','Inter', sans-serif;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    vertical-align: baseline;
+    white-space: nowrap;
+}
+
+/* Edit button - pen icon */
+.edit-btn {
+    position: absolute;
+    top: 8px;
+    right: 32px;
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    z-index: 10;
+}
+
+.edit-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    opacity: 1;
+    transform: scale(1.1);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Show edit button on container hover */
+.lightbox-title-container:hover .edit-btn,
+.lightbox-description-container:hover .edit-btn {
+    opacity: 0.7;
+}
+
+.edit-btn.editing {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.2);
+    color: #00ff41;
+    border-color: #00ff41;
+}
+
+/* Editable text base styles */
+.editable-title,
+.editable-description {
+    position: relative;
+    transition: all 0.3s ease;
+    min-height: 1.2em;
+    outline: none;
+    word-wrap: break-word;
+    word-break: break-word;
+    padding: 8px 0;
+    border-radius: 4px;
+}
+
+.editable-title.empty,
+.editable-description.empty {
+    color: #666666;
+    font-style: italic;
+}
+
+.editable-title.editing,
+.editable-description.editing {
+    background: transparent;
+    color: #ffffff;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* Textarea for editing */
+.editing-textarea {
+    background: rgba(40, 40, 40, 0.95) !important;
+    color: #ffffff !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 6px !important;
+    padding: 12px !important;
+    font-family: inherit !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    resize: vertical !important;
+    outline: none !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    transition: border-color 0.3s ease !important;
+}
+
+.editing-textarea:focus {
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Button positioning - Corner layout */
+.title-edit-controls,
+.description-edit-controls {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+/* Show controls on container hover */
+.lightbox-title-container:hover .title-edit-controls,
+.lightbox-description-container:hover .description-edit-controls,
+.title-edit-controls.visible,
+.description-edit-controls.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Small subtle buttons */
+.save-btn,
+.cancel-btn {
+    width: 24px;
+    height: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 11px;
+    transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.4);
+    opacity: 0.6;
+}
+
+.save-btn:hover {
+    background: #10b981;
+    color: white;
+    opacity: 1;
+    transform: scale(1.2);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    border-color: transparent;
+}
+
+.cancel-btn:hover {
+    background: #ef4444;
+    color: white;
+    opacity: 1;
+    transform: scale(1.2);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    border-color: transparent;
+}
+
+/* Disabled state */
+.save-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none !important;
+    background: rgba(0, 0, 0, 0.05);
+    color: #9ca3af;
+}
+
+/* LoRA Tags Styling */
+.lora-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: flex-start;
+}
+
+.lora-tag {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'JetBrains Mono', monospace;
+    transition: all 0.3s ease;
+    cursor: default;
+    box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
+}
+
+.lora-tag small {
+    margin-left: 6px;
+    opacity: 0.8;
+    font-size: 11px;
+    font-weight: 400;
+}
+
+.lora-tag:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+/* Enhanced copy button for prompts */
+.prompt-copy-btn {
+	top: 50%;
+    transform: translateY(-50%); 
+    background: rgba(16, 185, 129, 0.2);
+    border: 1px solid #10b981;
+    color: #10b981;
+    padding: 5px 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'InterVariable','Inter', sans-serif;
+    font-weight: 600;
+}
+
+.prompt-copy-btn:hover {
+    background: #10b981;
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+}
+
+/* Show more button for prompts */
+.prompt-show-more {
+    position: absolute;
+    bottom: 8px;
+    right: 15px;
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+    border: none;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 5px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'InterVariable','Inter', sans-serif;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.prompt-show-more:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.5);
+}
+
+/* Copy button for metadata values */
+.copyable-text {
+    position: relative;
+}
+
+.copy-btn {
+    position: absolute;
+    right: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 3px 3px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'InterVariable', 'Inter', sans-serif;
+    color: #ccc;
+    background: transparent;
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0;
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    box-shadow: none;
+    z-index: 10;
+}
+
+.metadata-item:hover .copy-btn {
+    opacity: 1;
+}
+
+.copy-btn:hover {
+    background-color: #10b981;
+    color: white;
+    border-color: #10b981;
+}
+
+/* Performance optimizations */
+.lightbox-title-container,
+.lightbox-description-container,
+.save-btn,
+.cancel-btn,
+.lora-tag,
+.prompt-copy-btn {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+.lightbox-title-container.animation-done,
+.lightbox-description-container.animation-done {
+    will-change: auto;
+}
+
+/* =========================================================================
+   3. LIGHT THEME - MODERN DARK STYLE
+   ========================================================================= */
+
+/* Light mode base - Dark background with white/gray text */
+[data-theme="light"] .lightbox {
+    background: rgba(20, 20, 20, 0.95);
+}
+
+[data-theme="light"] .lightbox-info {
+    background: rgba(30, 30, 30, 0.95);
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="light"] .lightbox-title {
+    color: #ffffff;
+    font-family: 'InterVariable','Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 8px;
+    text-transform: none;
+    letter-spacing: normal;
+    text-shadow: none;
+}
+
+[data-theme="light"] .lightbox-description {
+    color: #a8a8a8;
+    font-family: 'InterVariable','Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+/* Light mode navigation - Professional glassmorphism styling */
+[data-theme="light"] .lightbox-nav {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 300;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="light"] .lightbox-nav:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.15) 100%);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: white;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .lightbox-nav:active {
+    transform: translateY(-50%) scale(1.05);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .lightbox-nav:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3), 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced close button styling */
+[data-theme="light"] .lightbox-close {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 300;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="light"] .lightbox-close:hover {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.9) 0%, rgba(220, 38, 38, 0.9) 100%);
+    border-color: rgba(239, 68, 68, 0.8);
+    color: white;
+    transform: rotate(90deg) scale(1.1);
+    box-shadow: 0 12px 48px rgba(239, 68, 68, 0.3);
+}
+
+/* Light mode edit buttons */
+[data-theme="light"] .edit-btn {
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.7);
+    right: 8px;
+    top: 8px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+}
+
+[data-theme="light"] .edit-btn:hover {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+}
+
+[data-theme="light"] .edit-btn:active {
+    background: rgba(255, 255, 255, 0.4) !important;
+    transform: scale(1.05) !important;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6) !important;
+    transition: all 0.1s ease !important;
+}
+
+[data-theme="light"] .edit-btn.editing {
+    display: none;
+}
+
+[data-theme="light"] .editing-textarea {
+    background: rgba(40, 40, 40, 0.95) !important;
+    color: #ffffff !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+[data-theme="light"] .editing-textarea:focus {
+    border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+[data-theme="light"] .editable-title,
+[data-theme="light"] .editable-description {
+    font-family: 'InterVariable','Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    color: #ffffff;
+    padding: 8px 40px 8px 8px;
+    position: relative;
+}
+
+[data-theme="light"] .editable-title.empty,
+[data-theme="light"] .editable-description.empty {
+    color: #666666;
+    font-style: italic;
+}
+
+[data-theme="light"] .editable-title.editing,
+[data-theme="light"] .editable-description.editing {
+    background: rgba(40, 40, 40, 0.95);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 12px 80px 12px 16px;
+    margin: -12px -16px;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1), 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Light mode metadata */
+[data-theme="light"] .metadata-section {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="light"] .metadata-section h4 {
+    color: #ffffff;
+}
+
+[data-theme="light"] .metadata-label {
+    color: #a8a8a8;
+}
+
+[data-theme="light"] .metadata-value {
+    color: #e0e0e0;
+}
+
+[data-theme="light"] .metadata-item {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="light"] .metadata-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+/* Light mode prompts */
+[data-theme="light"] .prompt-section {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="light"] .prompt-header {
+    background: linear-gradient(135deg, #007aff 0%, #00bcd4 100%) !important; /* Blue to cyan gradient */
+    border-bottom: 1px solid rgba(0, 122, 255, 0.3) !important;
+    border-radius: 8px 8px 0 0; /* Apple rounded corners */
+}
+
+
+[data-theme="light"] .prompt-header h6 {
+    color: #ffffff;
+}
+
+[data-theme="light"] .prompt-content {
+    border-right: 3px solid rgba(255, 255, 255, 0.2) !important;
+    color: #e0e0e0 !important;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="light"] .section-header {
+    background: linear-gradient(135deg, #ffffff 0%, #f2f2f7 100%); /* White gradient */
+    border-bottom: 1px solid rgba(142, 142, 147, 0.3);
+    border-radius: 8px 8px 0 0; /* Apple rounded corners */
+}
+
+[data-theme="light"] .section-header:hover {
+    background: linear-gradient(135deg, #f2f2f7 0%, #e5e5ea 100%); /* Lighter white gradient on hover */
+}
+
+[data-theme="light"] .section-header h5 {
+    color: #1c1c1e; /* Dark text on white gradient */
+}
+
+[data-theme="light"] .toggle-icon {
+    color: #8e8e93; /* Apple secondary text */
+}
+
+[data-theme="light"] .negative-prompt-section .prompt-header {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff8a80 100%) !important; /* Lighter red gradient */
+    border-bottom: 1px solid rgba(255, 69, 58, 0.3) !important;
+}
+
+[data-theme="light"] .negative-prompt-section .prompt-header h6 {
+    color: #ffffff; /* White text on gradient */
+}
+
+/* Light mode buttons */
+[data-theme="light"] .title-show-more,
+[data-theme="light"] .description-show-more {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+}
+
+[data-theme="light"] .title-show-more:hover,
+[data-theme="light"] .description-show-more:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="light"] .expand-btn {
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+    backdrop-filter: blur(4px);
+}
+
+[data-theme="light"] .expand-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    transform: translateY(-1px) scale(1.05);
+}
+
+[data-theme="light"] .prompt-show-more {
+    background: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    color: #111;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+    font-weight: 600;
+    backdrop-filter: blur(4px);
+    padding: 6px 12px;
+}
+
+[data-theme="light"] .prompt-show-more:hover {
+    background: #ffffff;
+    color: #111;
+    border-color: rgba(255, 255, 255, 0.95);
+    transform: translateY(-2px) scale(1.08);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Light Theme - Blue Solid Background */
+[data-theme="light"] .copy-btn {
+    background: #f5f5f5;
+    border: 1px solid #d0d0d0;
+    color: #333;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .copy-btn:hover {
+    background: #e8e8e8;
+    color: #000;
+    border-color: #b0b0b0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .prompt-copy-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+[data-theme="light"] .prompt-copy-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+
+/* Light mode save/cancel buttons */
+[data-theme="light"] .title-edit-controls,
+[data-theme="light"] .description-edit-controls {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 20;
+}
+
+[data-theme="light"] .title-edit-controls.visible,
+[data-theme="light"] .description-edit-controls.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+[data-theme="light"] .title-edit-controls .save-btn,
+[data-theme="light"] .title-edit-controls .cancel-btn,
+[data-theme="light"] .description-edit-controls .save-btn,
+[data-theme="light"] .description-edit-controls .cancel-btn {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.4);
+    color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(4px);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 12px;
+}
+
+[data-theme="light"] .title-edit-controls .save-btn:hover,
+[data-theme="light"] .description-edit-controls .save-btn:hover {
+    background: #10b981;
+    color: white;
+    border-color: #10b981;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
+    transform: scale(1.1);
+}
+
+[data-theme="light"] .title-edit-controls .save-btn:active,
+[data-theme="light"] .description-edit-controls .save-btn:active {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.6);
+}
+
+[data-theme="light"] .title-edit-controls .cancel-btn:hover,
+[data-theme="light"] .description-edit-controls .cancel-btn:hover {
+    background: #ef4444;
+    color: white;
+    border-color: #ef4444;
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4);
+    transform: scale(1.1);
+}
+
+[data-theme="light"] .title-edit-controls .cancel-btn:active,
+[data-theme="light"] .description-edit-controls .cancel-btn:active {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.6);
+}
+
+/* Light mode focus states */
+[data-theme="light"] .editable-title:focus,
+[data-theme="light"] .editable-description:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
+}
+
+[data-theme="light"] .save-btn:focus,
+[data-theme="light"] .cancel-btn:focus {
+    outline: 2px solid #10b981;
+    outline-offset: 2px;
+}
+
+[data-theme="light"] .save-btn:focus {
+    outline-color: #10b981;
+}
+
+[data-theme="light"] .cancel-btn:focus {
+    outline-color: #ef4444;
+}
+
+/* Light mode selection styling */
+[data-theme="light"] .editable-title.editing::selection,
+[data-theme="light"] .editable-description.editing::selection {
+    background: rgba(255, 255, 255, 0.3);
+    color: #000000;
+}
+
+/* =========================================================================
+   4. DARK THEME - RETRO NEON STYLE
+   ========================================================================= */
+
+/* Dark mode navigation - Retro neon styling */
+[data-theme="dark"] .lightbox-nav {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 20, 0, 0.9) 100%);
+    border: 2px solid rgba(0, 255, 65, 0.3);
+    color: #00ff41;
+    border-radius: 0; /* Retro square style */
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 500;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 8px rgba(0, 255, 65, 0.5);
+    box-shadow: 
+        0 0 20px rgba(0, 255, 65, 0.2),
+        inset 0 1px 0 rgba(0, 255, 65, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 255, 65, 0.02) 2px,
+        rgba(0, 255, 65, 0.02) 4px
+    );
+}
+
+[data-theme="dark"] .lightbox-nav:hover {
+    background: linear-gradient(135deg, rgba(0, 255, 65, 0.2) 0%, rgba(0, 255, 65, 0.1) 100%);
+    border-color: #00ff41;
+    color: #000;
+    transform: translateY(-50%) scale(1.15);
+    text-shadow: 0 0 12px rgba(0, 255, 65, 0.8);
+    box-shadow: 
+        0 0 30px rgba(0, 255, 65, 0.5),
+        0 0 60px rgba(0, 255, 65, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .lightbox-nav:active {
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 
+        0 0 40px rgba(0, 255, 65, 0.7),
+        inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .lightbox-nav:focus {
+    outline: none;
+    box-shadow: 
+        0 0 20px rgba(0, 255, 65, 0.2),
+        0 0 0 3px rgba(0, 255, 65, 0.4),
+        inset 0 1px 0 rgba(0, 255, 65, 0.1);
+}
+
+[data-theme="dark"] .lightbox-close {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 20, 0, 0.9) 100%);
+    border: 2px solid rgba(0, 255, 65, 0.3);
+    color: #00ff41;
+    border-radius: 0; /* Retro square style */
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 500;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 8px rgba(0, 255, 65, 0.5);
+    box-shadow: 
+        0 0 20px rgba(0, 255, 65, 0.2),
+        inset 0 1px 0 rgba(0, 255, 65, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] .lightbox-close:hover {
+    background: linear-gradient(135deg, rgba(255, 51, 102, 0.9) 0%, rgba(220, 38, 38, 0.9) 100%);
+    border-color: #ff3366;
+    color: white;
+    transform: rotate(90deg) scale(1.15);
+    text-shadow: 0 0 12px rgba(255, 51, 102, 0.8);
+    box-shadow: 
+        0 0 30px rgba(255, 51, 102, 0.5),
+        0 0 60px rgba(255, 51, 102, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Dark mode edit buttons */
+[data-theme="dark"] .edit-btn {
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(0, 255, 65, 0.3);
+    color: rgba(0, 255, 65, 0.6);
+    right: 8px;
+    top: 8px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0; /* Retro square style */
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+    font-family: 'Courier New', monospace;
+}
+
+[data-theme="dark"] .edit-btn:hover {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
+    transform: scale(1.15);
+    text-shadow: 0 0 8px rgba(59, 130, 246, 0.8);
+}
+
+[data-theme="dark"] .edit-btn:active {
+    background: rgba(0, 255, 65, 0.3) !important;
+    transform: scale(1.1) !important;
+    box-shadow: 0 0 25px rgba(0, 255, 65, 0.8) !important;
+    transition: all 0.1s ease !important;
+}
+
+[data-theme="dark"] .edit-btn.editing {
+    display: none;
+}
+
+[data-theme="dark"] .editing-textarea {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 20, 0, 0.95) 100%) !important;
+    color: #00ff41 !important;
+    border: 2px solid #00ff41 !important;
+    text-shadow: 0 0 5px rgba(0, 255, 65, 0.8) !important;
+    background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 255, 65, 0.03) 2px,
+        rgba(0, 255, 65, 0.03) 4px
+    ) !important;
+}
+
+[data-theme="dark"] .editing-textarea:focus {
+    border-color: #00ff41 !important;
+    box-shadow: 
+        inset 0 0 30px rgba(0, 255, 65, 0.15),
+        0 0 20px rgba(0, 255, 65, 0.4) !important;
+}
+
+[data-theme="dark"] .editable-title,
+[data-theme="dark"] .editable-description {
+    font-family: 'Courier New', 'JetBrains Mono', monospace;
+    color: #00ff41;
+    text-shadow: 0 0 3px rgba(0, 255, 65, 0.3);
+    padding: 8px 40px 8px 8px;
+    position: relative;
+}
+
+[data-theme="dark"] .editable-title.empty,
+[data-theme="dark"] .editable-description.empty {
+    color: rgba(0, 255, 65, 0.4);
+    font-style: normal;
+}
+
+[data-theme="dark"] .editable-title.empty::before,
+[data-theme="dark"] .editable-description.empty::before {
+    content: "> ";
+    color: rgba(0, 255, 65, 0.6);
+}
+
+[data-theme="dark"] .editable-title.editing,
+[data-theme="dark"] .editable-description.editing {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 20, 0, 0.95) 100%);
+    color: #00ff41;
+    border: 2px solid #00ff41;
+    border-radius: 0;
+    padding: 12px 80px 12px 16px;
+    margin: -12px -16px;
+    box-shadow: 
+        inset 0 0 30px rgba(0, 255, 65, 0.15),
+        0 0 20px rgba(0, 255, 65, 0.4);
+    text-shadow: 0 0 5px rgba(0, 255, 65, 0.8);
+    background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 255, 65, 0.03) 2px,
+        rgba(0, 255, 65, 0.03) 4px
+    );
+}
+
+/* Dark mode save/cancel buttons */
+[data-theme="dark"] .title-edit-controls,
+[data-theme="dark"] .description-edit-controls {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 20;
+}
+
+[data-theme="dark"] .title-edit-controls.visible,
+[data-theme="dark"] .description-edit-controls.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+[data-theme="dark"] .title-edit-controls .save-btn,
+[data-theme="dark"] .title-edit-controls .cancel-btn,
+[data-theme="dark"] .description-edit-controls .save-btn,
+[data-theme="dark"] .description-edit-controls .cancel-btn {
+    width: 24px;
+    height: 24px;
+    border: 1px solid rgba(0, 255, 65, 0.3);
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 10px;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(0, 0, 0, 0.8);
+    color: rgba(0, 255, 65, 0.6);
+}
+
+[data-theme="dark"] .title-edit-controls .save-btn:hover,
+[data-theme="dark"] .description-edit-controls .save-btn:hover {
+    background: linear-gradient(135deg, #00ff41 0%, #00cc33 100%);
+    color: #000;
+    transform: scale(1.15);
+    box-shadow: 
+        0 0 15px rgba(0, 255, 65, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border-color: #00ff41;
+}
+
+[data-theme="dark"] .title-edit-controls .save-btn:active,
+[data-theme="dark"] .description-edit-controls .save-btn:active {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.7);
+}
+
+[data-theme="dark"] .title-edit-controls .cancel-btn:hover,
+[data-theme="dark"] .description-edit-controls .cancel-btn:hover {
+    background: linear-gradient(135deg, #ff3366 0%, #cc1144 100%);
+    color: #fff;
+    transform: scale(1.15);
+    box-shadow: 
+        0 0 15px rgba(255, 51, 102, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border-color: #ff3366;
+}
+
+[data-theme="dark"] .title-edit-controls .cancel-btn:active,
+[data-theme="dark"] .description-edit-controls .cancel-btn:active {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(255, 51, 102, 0.7);
+}
+
+/* Dark mode show more buttons */
+[data-theme="dark"] .title-show-more,
+[data-theme="dark"] .description-show-more {
+    border: 1px solid #00ff41;
+    color: #00ff41;
+    border-radius: 0;
+    font-family: 'InterVariable','Inter', sans-serif;
+}
+
+[data-theme="dark"] .title-show-more:hover {
+    background: #00ff41;
+    color: #000;
+    text-shadow: none;
+}
+
+[data-theme="dark"] .description-show-more {
+    border-color: #ffa500;
+    color: #ffa500;
+}
+
+[data-theme="dark"] .description-show-more:hover {
+    background: #ffa500;
+    color: #000;
+}
+
+/* Dark mode prompts */
+[data-theme="dark"] .prompt-section {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="dark"] .prompt-header {
+    background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .prompt-header h6 {
+    color: white;
+}
+
+[data-theme="dark"] .prompt-content {
+    border-right: 3px solid #8be9fd;
+    color: #f1fa8c;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .prompt-copy-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+[data-theme="dark"] .prompt-copy-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+[data-theme="dark"] .prompt-show-more {
+    background: linear-gradient(45deg, #ff6b35, #f7931e);
+    border: none;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .prompt-show-more:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+}
+
+/* Dark mode negative prompt */
+[data-theme="dark"] .negative-prompt-section .prompt-header {
+    background: linear-gradient(135deg, #e17055, #d63031);
+}
+
+[data-theme="dark"] .negative-prompt-section .prompt-content {
+    border-right: 3px solid #ff6b6b;
+    color: #ffb3b3;
+}
+
+/* Dark mode focus states */
+[data-theme="dark"] .editable-title:focus,
+[data-theme="dark"] .editable-description:focus {
+    outline-color: #00ff41;
+    outline-style: dashed;
+}
+
+[data-theme="dark"] .edit-btn:focus {
+    outline-color: #00ff41;
+    outline-style: solid;
+}
+
+[data-theme="dark"] .save-btn:focus {
+    outline-color: #00ff41;
+}
+
+[data-theme="dark"] .cancel-btn:focus {
+    outline-color: #ff3366;
+}
+
+/* Dark mode selection styling */
+[data-theme="dark"] .editable-title.editing::selection,
+[data-theme="dark"] .editable-description.editing::selection {
+    background: rgba(0, 255, 65, 0.3);
+    color: #000;
+}
+
+/* Dark mode edit indicators */
+[data-theme="dark"] .editable-title::after,
+[data-theme="dark"] .editable-description::after {
+    background: #00ff41;
+    box-shadow: 0 0 4px rgba(0, 255, 65, 0.5);
+}
+
+/* Dark mode LoRA tags */
+[data-theme="dark"] .lora-tag {
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+    box-shadow: 0 2px 6px rgba(255, 107, 53, 0.3);
+}
+
+[data-theme="dark"] .lora-tag:hover {
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.5);
+}
+
+/* =========================================================================
+   5. COMMON STYLES
+   ========================================================================= */
+
+/* Common styles that apply to both themes */
+
+/* Smooth transition for all button types */
+.title-show-more,
+.description-show-more,
+.expand-btn,
+.prompt-show-more,
+.copy-btn,
+.prompt-copy-btn,
+.save-btn,
+.cancel-btn,
+.edit-btn,
+.lightbox-nav,
+.lightbox-close {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Focus states for accessibility (common) */
+.title-show-more:focus,
+.description-show-more:focus,
+.expand-btn:focus,
+.prompt-show-more:focus,
+.edit-btn:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.8);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2), 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* Hide/Show logic for editing states */
+.edit-btn {
+    display: flex !important;
+    position: absolute !important;
+    right: 8px !important;
+    top: 8px !important;
+    z-index: 20 !important;
+}
+
+.title-edit-controls,
+.description-edit-controls {
+    display: flex !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+.title-edit-controls.visible,
+.description-edit-controls.visible {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+.title-edit-controls.visible ~ .edit-btn,
+.description-edit-controls.visible ~ .edit-btn {
+    display: none !important;
+}
